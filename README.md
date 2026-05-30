@@ -355,94 +355,10 @@ Export
 
 ## Available Export Formats
 
-### CSV Export
+### CSV Export and JSON
 
-Downloads:
 
-* Final Rankings
-* Team Statistics
-* Point Totals
 
----
-
-### JSON Backup
-
-Downloads:
-
-* Tournament Configuration
-* Teams
-* Matches
-* Point Matrix
-* Payout Data
-
-Perfect for long-term backups.
-
----
-
-# 🎮 Supported Games
-
-ApexRank Pro supports:
-
-* BGMI
-* PUBG Mobile
-* Free Fire
-* Call of Duty Mobile
-* Valorant
-* Apex Legends
-* Fortnite
-* Custom Tournament Formats
-
----
-
-# 🧮 Scoring Logic
-
-```text
-Total Points =
-Placement Points
-+ Kill Points
-+ Bonus Points
-- Penalty Points
-```
-
-### Tie-Breaker System
-
-When teams have equal points:
-
-1. Higher Placement Points
-2. Higher Kill Points
-3. Better Recent Match Result
-
----
-
-# ⭐ Best Practices
-
-### Recommended Workflow
-
-```text
-1. Configure Tournament
-2. Register Teams
-3. Set Point Matrix
-4. Log Match Results
-5. Review Analytics
-6. Calculate Payouts
-7. Export Results
-```
-
-### Backup Strategy
-
-* Export JSON after every match day
-* Keep CSV reports for public sharing
-* Verify payout settings before finalizing rewards
-
----
-
-# 🎉 Conclusion
-
-ApexRank Pro provides tournament organizers with a complete ecosystem for esports event management.
-
-From registration to rankings, analytics, and prize distribution, every aspect of tournament administration is streamlined into a single professional platform.
-
----
 
 <div align="center">
 
