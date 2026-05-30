@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ApexRank Pro | Mobile-Optimized Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #0b0f19; 
+            color: #f3f4f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #111827; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row selection:bg-indigo-500 selection:text-white pb-20 md:pb-0">
+
+    <!-- TOP BAR (Mobile View Head) -->
+    <header class="w-full md:w-auto border-b md:border-b-0 border-gray-800 bg-gray-900/50 backdrop-blur-md sticky top-0 z-50 px-4 md:px-6 py-3.5 flex items-center justify-between md:hidden">
+        <div class="flex items-center gap-2">
+            <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-600/30">
+                <i data-lucide="trophy" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-white" id="navTournamentNameMobile">Ultimate</h1>
+            </div>
+        </div>
+        <div class="bg-gray-800/80 border border-gray-700/50 rounded-lg px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-indigo-400" id="navGameNameMobile">
+            BGMI
+        </div>
+    </header>
+
+    <!-- SIDEBAR (Desktop) / BOTTOM NAV (Mobile Android Layout) -->
+    <aside class="fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:left-auto md:right-auto md:w-64 border-t md:border-t-0 md:border-r border-gray-800 bg-gray-900/95 md:bg-gray-900/20 backdrop-blur-lg md:backdrop-blur-none p-2 md:p-4 flex flex-row md:flex-col justify-around md:justify-start gap-1 z-50 shrink-0">
+        <p class="hidden md:block text-xs font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Management</p>
+        
+        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn active flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2.5 md:px-4 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-medium transition-all text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 md:w-full text-center md:text-left">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 md:w-4 md:h-4"></i> <span>Dash</span>
+        </button>
+        <button onclick="switchTab('teams')" id="btn-teams" class="nav-btn flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2.5 md:px-4 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-medium transition-all text-gray-400 md:w-full text-center md:text-left">
+            <i data-lucide="users" class="w-5 h-5 md:w-4 md:h-4"></i> <span>Teams</span>
+        </button>
+        <button onclick="switchTab('matches')" id="btn-matches" class="nav-btn flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2.5 md:px-4 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-medium transition-all text-gray-400 md:w-full text-center md:text-left">
+            <i data-lucide="swords" class="w-5 h-5 md:w-4 md:h-4"></i> <span>Matches</span>
+        </button>
+        <button onclick="switchTab('payouts')" id="btn-payouts" class="nav-btn flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2.5 md:px-4 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-medium transition-all text-gray-400 md:w-full text-center md:text-left">
+            <i data-lucide="dollar-sign" class="w-5 h-5 md:w-4 md:h-4"></i> <span>Payouts</span>
+        </button>
+        <button onclick="switchTab('leaderboard')" id="btn-leaderboard" class="nav-btn flex flex-col md:flex-row items-center gap-1 md:gap-3 px-2.5 md:px-4 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-medium transition-all text-gray-400 md:w-full text-center md:text-left">
+            <i data-lucide="list-ordered" class="w-5 h-5 md:w-4 md:h-4"></i> <span>Live</span>
+        </button>
+
+        <!-- Hidden elements on mobile side menu, available on desktop menu view -->
+        <button onclick="switchTab('scoring')" id="btn-scoring" class="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+            <i data-lucide="sliders" class="w-4 h-4"></i> Point Matrix
+        </button>
+        <button onclick="switchTab('analytics')" id="btn-analytics" class="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+            <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Analytics
+        </button>
+        <button onclick="switchTab('export')" id="btn-export" class="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+            <i data-lucide="download" class="w-4 h-4"></i> Export
+        </button>
+    </aside>
+
+    <!-- MAIN APPLICATION WORKSPACE -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+        
+        <!-- MOBILE UTILITY HEADERS (Visible only when desktop configuration is active) -->
+        <div class="flex md:hidden justify-between gap-2 mb-4">
+            <button onclick="switchTab('scoring')" class="flex-1 text-center py-2 bg-gray-900 border border-gray-800 rounded-xl text-xs font-semibold text-gray-300">Point Settings</button>
+            <button onclick="switchTab('analytics')" class="flex-1 text-center py-2 bg-gray-900 border border-gray-800 rounded-xl text-xs font-semibold text-gray-300">Analytics</button>
+            <button onclick="switchTab('export')" class="flex-1 text-center py-2 bg-gray-900 border border-gray-800 rounded-xl text-xs font-semibold text-gray-300">Backup Tool</button>
+        </div>
+
+        <!-- TAB: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content active space-y-4 md:space-y-8">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-gradient-to-r from-gray-900 to-indigo-950/40 border border-gray-800 p-4 md:p-6 rounded-2xl">
+                <div>
+                    <h2 class="text-lg md:text-2xl font-bold text-white mb-0.5" id="dashMetaTitle">Ultimate Championship</h2>
+                    <p class="text-xs text-gray-400">Setup configuration, tournament telemetry, and performance controls.</p>
+                </div>
+                <button onclick="openModal('modalTournamentSetup')" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs md:text-sm px-4 py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+                    <i data-lucide="settings" class="w-4 h-4"></i> Configure Tournament
+                </button>
+            </div>
+
+            <!-- METRICS GRID -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
+                <div class="bg-gray-900/50 border border-gray-800 p-3 md:p-5 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4">
+                    <div class="bg-indigo-500/10 text-indigo-400 p-2 md:p-3 rounded-lg md:rounded-xl"><i data-lucide="shield" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                    <div><p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-gray-500">Teams</p><h3 class="text-lg md:text-2xl font-bold text-white" id="statTeams">0</h3></div>
+                </div>
+                <div class="bg-gray-900/50 border border-gray-800 p-3 md:p-5 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4">
+                    <div class="bg-emerald-500/10 text-emerald-400 p-2 md:p-3 rounded-lg md:rounded-xl"><i data-lucide="activity" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                    <div><p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-gray-500">Matches</p><h3 class="text-lg md:text-2xl font-bold text-white" id="statMatches">0</h3></div>
+                </div>
+                <div class="bg-gray-900/50 border border-gray-800 p-3 md:p-5 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4">
+                    <div class="bg-amber-500/10 text-amber-400 p-2 md:p-3 rounded-lg md:rounded-xl"><i data-lucide="zap" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                    <div><p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-gray-500">Total Kills</p><h3 class="text-lg md:text-2xl font-bold text-white" id="statKills">0</h3></div>
+                </div>
+                <div class="bg-gray-900/50 border border-gray-800 p-3 md:p-5 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4">
+                    <div class="bg-purple-500/10 text-purple-400 p-2 md:p-3 rounded-lg md:rounded-xl"><i data-lucide="dollar-sign" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                    <div><p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-gray-500">Prize Pool</p><h3 class="text-lg md:text-2xl font-bold text-white" id="statTotalPrize">$10,000</h3></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800/80 rounded-2xl p-4 md:p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-sm md:text-lg text-white flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-indigo-400"></i> Trajectory Trend</h3>
+                        <span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full font-medium" id="statTopTeam">Top Teams</span>
+                    </div>
+                    <div class="h-[200px] md:h-[280px] w-full"><canvas id="dashTrajectoryChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: TEAMS -->
+        <section id="tab-teams" class="tab-content space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-lg md:text-2xl font-bold text-white">Roster Control</h2>
+                </div>
+                <button onclick="openModal('modalTeam')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-3 py-2.5 rounded-xl transition flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4"></i> Add Org</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5" id="teamsContainer"></div>
+        </section>
+
+        <!-- TAB: SCORING SETTINGS -->
+        <section id="tab-scoring" class="tab-content space-y-4">
+            <div class="border-b border-gray-800 pb-4">
+                <h2 class="text-lg md:text-2xl font-bold text-white">Point Matrix Setup</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-gray-900/50 border border-gray-800 p-4 rounded-xl space-y-3">
+                    <h3 class="font-bold text-sm text-white">Rule Presets</h3>
+                    <div class="grid grid-cols-3 lg:grid-cols-1 gap-2">
+                        <button onclick="applyPreset('bgmi')" class="text-center lg:text-left p-2.5 rounded-xl bg-gray-800/50 text-xs font-semibold text-white">BGMI (15p)</button>
+                        <button onclick="applyPreset('ff')" class="text-center lg:text-left p-2.5 rounded-xl bg-gray-800/50 text-xs font-semibold text-white">FreeFire (12p)</button>
+                        <button onclick="applyPreset('valorant')" class="text-center lg:text-left p-2.5 rounded-xl bg-gray-800/50 text-xs font-semibold text-white">VAL (Round)</button>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800 p-4 rounded-xl space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Kill Point Value</label>
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="cfgKillPoints" value="1" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-white text-sm">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-2">Placement Distribution Matrix</h4>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="matrixContainer"></div>
+                    </div>
+                    <button onclick="saveMatrix()" class="w-full bg-indigo-600 py-2.5 rounded-xl font-semibold text-xs text-white">Save Global Configuration</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: MATCH ENTRY -->
+        <section id="tab-matches" class="tab-content space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-lg md:text-2xl font-bold text-white">Matches Logs</h2>
+                </div>
+                <button onclick="openModal('modalMatch')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-3 py-2.5 rounded-xl flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4"></i> New Match</button>
+            </div>
+            <div class="bg-gray-900/30 border border-gray-800 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
+                        <thead>
+                            <tr class="bg-gray-900/80 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                <th class="px-4 py-3">Match</th>
+                                <th class="px-4 py-3">Map Location</th>
+                                <th class="px-4 py-3">Timestamp</th>
+                                <th class="px-4 py-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchHistoryTableBody" class="text-xs text-gray-300 divide-y divide-gray-800/50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: PRIZE POOL & PAYOUTS -->
+        <section id="tab-payouts" class="tab-content space-y-4">
+            <div class="border-b border-gray-800 pb-4">
+                <h2 class="text-lg md:text-2xl font-bold text-white">Financial Distribution</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-gray-900/40 border border-gray-800 p-4 rounded-xl space-y-3">
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400">Allocation Configuration</h3>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1">Total Pool ($)</label>
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="finPrizePool" value="10000" oninput="recalculateFinancials()" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1">Bounty ($/Kill)</label>
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="finKillBounty" value="10" oninput="recalculateFinancials()" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm">
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] text-gray-500 uppercase font-bold mb-1">Rank Cuts %</h4>
+                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1" id="payoutPercentageContainer"></div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800 rounded-xl overflow-hidden">
+                    <div class="p-3 bg-gray-900/80 border-b border-gray-800 text-xs text-indigo-400 font-semibold" id="payoutSummaryText">Total Distributed: $0</div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse min-w-[500px]">
+                            <thead>
+                                <tr class="bg-gray-950/40 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                    <th class="px-3 py-2 text-center">Rank</th>
+                                    <th class="px-4 py-2">Team</th>
+                                    <th class="px-3 py-2 text-right">Base Pay</th>
+                                    <th class="px-3 py-2 text-right">Bounty</th>
+                                    <th class="px-4 py-2 text-right text-emerald-400">Gross</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payoutTableBody" class="text-xs divide-y divide-gray-800/40 text-gray-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: LEADERBOARD -->
+        <section id="tab-leaderboard" class="tab-content space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-gray-800 pb-4">
+                <h2 class="text-lg md:text-2xl font-bold text-white">Live Standings</h2>
+                <input type="text" id="lbSearch" oninput="renderLeaderboard()" placeholder="Search team..." class="w-full sm:w-48 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+            </div>
+            <div class="bg-gray-900/30 border border-gray-800 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead>
+                            <tr class="bg-gray-900/80 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                <th class="px-3 py-3 text-center w-12">Rank</th>
+                                <th class="px-4 py-3">Team</th>
+                                <th class="px-2 py-3 text-center">M</th>
+                                <th class="px-2 py-3 text-center text-amber-400">WWCD</th>
+                                <th class="px-2 py-3 text-center">Placement</th>
+                                <th class="px-2 py-3 text-center">Kills</th>
+                                <th class="px-2 py-3 text-center text-emerald-400">Bns</th>
+                                <th class="px-2 py-3 text-center text-rose-400">Pnl</th>
+                                <th class="px-4 py-3 text-center text-indigo-400 font-extrabold bg-indigo-600/5 w-20">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody" class="text-xs font-medium text-gray-300 divide-y divide-gray-800/50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: ANALYTICS -->
+        <section id="tab-analytics" class="tab-content space-y-4">
+            <div class="border-b border-gray-800 pb-4"><h2 class="text-lg md:text-2xl font-bold text-white">Advanced Engine</h2></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-gray-900/30 border border-gray-800 p-4 rounded-xl"><h3 class="text-xs font-bold text-white mb-2">Kill Metric Points</h3><div class="h-56"><canvas id="chartKillDistribution"></canvas></div></div>
+                <div class="bg-gray-900/30 border border-gray-800 p-4 rounded-xl"><h3 class="text-xs font-bold text-white mb-2">Placement Points Ratio</h3><div class="h-56"><canvas id="chartPlacementRatios"></canvas></div></div>
+            </div>
+        </section>
+
+        <!-- TAB: EXPORT -->
+        <section id="tab-export" class="tab-content space-y-4">
+            <div class="border-b border-gray-800 pb-4"><h2 class="text-lg md:text-2xl font-bold text-white">Export & Sync</h2></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button onclick="exportToCSV()" class="bg-emerald-600 p-4 rounded-xl font-semibold text-xs text-white text-center">Download CSV Sheet</button>
+                <button onclick="exportToJSON()" class="bg-indigo-600 p-4 rounded-xl font-semibold text-xs text-white text-center">Download JSON Database File</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL FRAMEWORK CONTAINER (MOBILE SCALED) -->
+    <!-- MODAL: TOURNAMENT SETUP -->
+    <div id="modalTournamentSetup" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-5 space-y-3.5 max-h-[90vh] overflow-y-auto">
+            <h3 class="font-bold text-base text-white">Configure Tournament Parameters</h3>
+            <div class="space-y-2 text-xs">
+                <div><label class="block text-gray-400 mb-1">Tournament Title</label><input type="text" id="setupName" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+                <div><label class="block text-gray-400 mb-1">Target Game</label><input type="text" id="setupGame" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-gray-400 mb-1">Format</label><select id="setupFormat" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"><option>Solo</option><option>Duo</option><option selected>Squad</option></select></div>
+                    <div><label class="block text-gray-400 mb-1">Max Matches</label><input type="number" pattern="[0-9]*" inputmode="numeric" id="setupMatches" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+                </div>
+                <div><label class="block text-gray-400 mb-1">Organizer Brand Tag</label><input type="text" id="setupOrg" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+            </div>
+            <div class="flex justify-end gap-2 text-xs pt-2"><button onclick="closeModal('modalTournamentSetup')" class="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg">Cancel</button><button onclick="saveTournamentSetup()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Apply</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTER TEAM -->
+    <div id="modalTeam" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 space-y-3.5">
+            <h3 class="font-bold text-base text-white">Register Organization</h3>
+            <div class="space-y-2 text-xs">
+                <div><label class="block text-gray-400 mb-1">Org Name</label><input type="text" id="teamName" placeholder="e.g., Team Soul" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+                <div><label class="block text-gray-400 mb-1">Identifier Tag</label><input type="text" id="teamTag" placeholder="e.g., SOUL" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+                <div><label class="block text-gray-400 mb-1">Captain Alias</label><input type="text" id="teamCaptain" placeholder="e.g., Mortal" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"></div>
+            </div>
+            <div class="flex justify-end gap-2 text-xs pt-2"><button onclick="closeModal('modalTeam')" class="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg">Cancel</button><button onclick="registerTeam()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Commit</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL: MATCH ENTRY (HIGH-ACCESSIBILITY MOBILE DESIGN) -->
+    <div id="modalMatch" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-3xl p-4 flex flex-col max-h-[92vh]">
+            <h3 class="font-bold text-base text-white mb-2">Log Match Metrics</h3>
+            <div class="grid grid-cols-2 gap-2 bg-gray-950 p-2.5 rounded-xl mb-3 text-xs">
+                <div><label class="block text-gray-400 mb-0.5">Map Target Vector</label><input type="text" id="matchMap" value="Erangel" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-1.5 text-white"></div>
+                <div><label class="block text-gray-400 mb-0.5">Match Index #</label><input type="number" pattern="[0-9]*" inputmode="numeric" id="matchNumber" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-1.5 text-white"></div>
+            </div>
+
+            <!-- Scrollable input field list for heavy data logging fields -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-800/60 rounded-xl mb-3 bg-gray-950/20">
+                <table class="w-full text-left border-collapse min-w-[460px]">
+                    <thead>
+                        <tr class="bg-gray-950 text-[10px] font-bold uppercase text-gray-400 sticky top-0 border-b border-gray-800 z-10">
+                            <th class="p-2">Team</th>
+                            <th class="p-2 w-16 text-center">Rank</th>
+                            <th class="p-2 w-16 text-center">Kills</th>
+                            <th class="p-2 w-16 text-center text-emerald-400">Bonus</th>
+                            <th class="p-2 w-16 text-center text-rose-400">Pnlty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matchEntryTableBody" class="divide-y divide-gray-800/40 text-xs"></tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center text-xs pt-1">
+                <label class="bg-gray-800 p-2 rounded-lg font-semibold text-gray-300 cursor-pointer text-[11px]">
+                    CSV Load <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                </label>
+                <div class="flex gap-2"><button onclick="closeModal('modalMatch')" class="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg">Cancel</button><button onclick="commitMatch()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Commit Logs</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE SYSTEM ENGINE MODULE -->
+    <script>
+        let state = {
+            tournament: { name: "Ultimate Championship", game: "BGMI", type: "Squad", totalMatches: 10, organizer: "Apex Ops" },
+            placementMatrix: { 1:15, 2:12, 3:10, 4:8, 5:6, 6:4, 7:2, 8:1, 9:1, 10:1, 11:1, 12:1, 13:0, 14:0, 15:0, 16:0 },
+            killPointValue: 1, prizePool: 10000, killBounty: 10,
+            payoutPercentages: { 1:40, 2:25, 3:15, 4:10, 5:5, 6:5, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 },
+            teams: [], matches: []
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadStateFromStorage();
+            if(state.teams.length === 0) seedDemoDatabase();
+            syncMetaUI();
+            buildMatrixConfigUI();
+            buildPayoutConfigUI();
+            recalculateLeaderboardData();
+            initCharts();
+        });
+
+        function openModal(id) { 
+            document.getElementById(id).classList.remove('hidden'); 
+            if(id === 'modalMatch') populateMatchEntryForm();
+        }
+        
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('text-indigo-400', 'bg-indigo-600/10', 'border', 'border-indigo-500/20');
+                el.classList.add('text-gray-400');
+            });
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('text-indigo-400', 'bg-indigo-600/10', 'border', 'border-indigo-500/20');
+            }
+            if(tabId === 'analytics') updateAnalyticsCharts();
+            if(tabId === 'payouts') recalculateFinancials();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function saveStateToStorage() { localStorage.setItem('apexrank_state', JSON.stringify(state)); }
+        
+        function loadStateFromStorage() {
+            const saved = localStorage.getItem('apexrank_state');
+            if(saved) {
+                try { 
+                    state = JSON.parse(saved); 
+                    if(!state.matches) state.matches = [];
+                } catch(e) { console.error("Cache processing mapping drop structural fail."); }
+            }
+        }
+
+        function seedDemoDatabase() {
+            state.teams = [
+                { id: "t1", name: "Team Soul", tag: "SOUL", captain: "Mortal" },
+                { id: "t2", name: "GodLike Esports", tag: "GOD", captain: "Jonathan" },
+                { id: "t3", name: "Team XSpark", tag: "TX", captain: "Scout" },
+                { id: "t4", name: "Global Esports", tag: "GE", captain: "Mavi" },
+                { id: "t5", name: "Entity Gaming", tag: "ENT", captain: "Saumraj" },
+                { id: "t6", name: "Revenant Esports", tag: "RNT", captain: "Sensei" }
+            ];
+            state.matches = [
+                {
+                    id: "m1", matchNumber: 1, map: "Erangel", timestamp: new Date().toLocaleString(),
+                    records: [
+                        { teamId: "t1", placement: 1, kills: 5, bonus: 2, penalty: 0 },
+                        { teamId: "t2", placement: 2, kills: 3, bonus: 0, penalty: 0 },
+                        { teamId: "t3", placement: 3, kills: 2, bonus: 0, penalty: 0 },
+                        { teamId: "t4", placement: 4, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t6", placement: 6, kills: 0, bonus: 0, penalty: 0 }
+                    ]
+                }
+            ];
+            saveStateToStorage();
+        }
+
+        function syncMetaUI() {
+            document.getElementById('navTournamentNameMobile').innerText = state.tournament.name;
+            document.getElementById('navGameNameMobile').innerText = state.tournament.game;
+            document.getElementById('dashMetaTitle').innerText = state.tournament.name;
+            document.getElementById('statTotalPrize').innerText = `$${state.prizePool.toLocaleString()}`;
+            document.getElementById('finPrizePool').value = state.prizePool;
+            document.getElementById('finKillBounty').value = state.killBounty;
+            renderTeamsDashboardView();
+            renderMatchHistoryList();
+            renderLeaderboard();
+        }
+
+        function saveTournamentSetup() {
+            state.tournament.name = document.getElementById('setupName').value;
+            state.tournament.game = document.getElementById('setupGame').value;
+            state.tournament.type = document.getElementById('setupFormat').value;
+            state.tournament.totalMatches = parseInt(document.getElementById('setupMatches').value) || 10;
+            state.tournament.organizer = document.getElementById('setupOrg').value;
+            saveStateToStorage();
+            syncMetaUI();
+            closeModal('modalTournamentSetup');
+        }
+
+        function renderTeamsDashboardView() {
+            const container = document.getElementById('teamsContainer');
+            container.innerHTML = '';
+            state.teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-900/50 border border-gray-800 p-4 rounded-xl flex items-center justify-between";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-xs font-mono font-bold px-2 py-0.5 bg-indigo-500/10 text-indigo-400 rounded border border-indigo-500/10">${team.tag}</span>
+                        <div><h4 class="font-bold text-sm text-white">${team.name}</h4><p class="text-[11px] text-gray-500">Cpt: ${team.captain}</p></div>
+                    </div>
+                    <button onclick="removeTeam('${team.id}')" class="text-gray-600 hover:text-rose-400 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+            document.getElementById('statTeams').innerText = state.teams.length;
+        }
+
+        function registerTeam() {
+            const name = document.getElementById('teamName').value.trim();
+            const tag = document.getElementById('teamTag').value.trim().toUpperCase();
+            const captain = document.getElementById('teamCaptain').value.trim();
+            if(!name || !tag) return alert("Roster metadata tags incomplete.");
+            state.teams.push({ id: 't_' + Date.now(), name, tag, captain: captain || "Unassigned" });
+            saveStateToStorage();
+            syncMetaUI();
+            recalculateLeaderboardData();
+            closeModal('modalTeam');
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamTag').value = '';
+            document.getElementById('teamCaptain').value = '';
+        }
+
+        function removeTeam(id) {
+            if(confirm("Purge selected organization schema allocation map row?")) {
+                state.teams = state.teams.filter(t => t.id !== id);
+                state.matches.forEach(m => { m.records = m.records.filter(r => r.teamId !== id); });
+                saveStateToStorage();
+                syncMetaUI();
+                recalculateLeaderboardData();
+            }
+        }
+
+        function buildMatrixConfigUI() {
+            const container = document.getElementById('matrixContainer');
+            container.innerHTML = '';
+            document.getElementById('cfgKillPoints').value = state.killPointValue;
+            for(let i=1; i<=16; i++) {
+                const div = document.createElement('div');
+                div.className = "bg-gray-950 p-1.5 border border-gray-800 rounded-lg flex items-center gap-1";
+                div.innerHTML = `<span class="text-[10px] text-gray-500 w-4 text-right">#${i}</span><input type="number" pattern="[0-9]*" inputmode="numeric" id="pMatrix_${i}" value="${state.placementMatrix[i] || 0}" class="w-full bg-gray-900 text-center rounded py-0.5 text-xs text-white">`;
+                container.appendChild(div);
+            }
+        }
+
+        function buildPayoutConfigUI() {
+            const container = document.getElementById('payoutPercentageContainer');
+            container.innerHTML = '';
+            for(let i=1; i<=16; i++) {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-gray-950 p-1.5 border border-gray-800/60 rounded-lg text-[11px] px-2.5";
+                div.innerHTML = `<span>Rank #${i}</span><input type="number" pattern="[0-9]*" inputmode="numeric" id="payoutPct_${i}" value="${state.payoutPercentages[i] || 0}" oninput="recalculateFinancials()" class="w-10 bg-gray-900 text-center rounded text-white py-0.5">`;
+                container.appendChild(div);
+            }
+        }
+
+        function applyPreset(type) {
+            if(type === 'bgmi') state.placementMatrix = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:4, 7:2, 8:1, 9:1, 10:1, 11:1, 12:1, 13:0, 14:0, 15:0, 16:0 };
+            else if(type === 'ff') state.placementMatrix = { 1:12, 2:9, 3:8, 4:7, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 };
+            else if(type === 'valorant') state.placementMatrix = { 1:10, 2:5, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 };
+            buildMatrixConfigUI();
+        }
+
+        function saveMatrix() {
+            state.killPointValue = parseInt(document.getElementById('cfgKillPoints').value) || 0;
+            for(let i=1; i<=16; i++) state.placementMatrix[i] = parseInt(document.getElementById(`pMatrix_${i}`).value) || 0;
+            saveStateToStorage();
+            recalculateLeaderboardData();
+            alert("Matrix schema compiled.");
+        }
+
+        function populateMatchEntryForm() {
+            const body = document.getElementById('matchEntryTableBody');
+            body.innerHTML = '';
+            document.getElementById('matchNumber').value = state.matches.length + 1;
+            state.teams.forEach(team => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 font-bold text-white text-[11px]" data-team-id="${team.id}">${team.tag}</td>
+                    <td class="p-1"><input type="number" pattern="[0-9]*" inputmode="numeric" class="t-placement w-14 bg-gray-950 text-center py-1 rounded text-white" value="1"></td>
+                    <td class="p-1"><input type="number" pattern="[0-9]*" inputmode="numeric" class="t-kills w-14 bg-gray-950 text-center py-1 rounded text-white" value="0"></td>
+                    <td class="p-1"><input type="number" pattern="[0-9]*" inputmode="numeric" class="t-bonus w-14 bg-gray-950 text-center py-1 rounded text-emerald-400" value="0"></td>
+                    <td class="p-1"><input type="number" pattern="[0-9]*" inputmode="numeric" class="t-penalty w-14 bg-gray-950 text-center py-1 rounded text-rose-400" value="0"></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function commitMatch() {
+            const map = document.getElementById('matchMap').value.trim() || "Map Log";
+            const matchNumber = parseInt(document.getElementById('matchNumber').value) || (state.matches.length + 1);
+            const rows = document.querySelectorAll('#matchEntryTableBody tr');
+            const records = [];
+            rows.forEach(row => {
+                const teamId = row.cells[0].getAttribute('data-team-id');
+                if(!teamId) return;
+                records.push({
+                    teamId,
+                    placement: parseInt(row.querySelector('.t-placement').value) || 16,
+                    kills: parseInt(row.querySelector('.t-kills').value) || 0,
+                    bonus: parseInt(row.querySelector('.t-bonus').value) || 0,
+                    penalty: parseInt(row.querySelector('.t-penalty').value) || 0
+                });
+            });
+            state.matches.push({ id: 'm_' + Date.now(), matchNumber, map, timestamp: new Date().toLocaleTimeString(), records });
+            saveStateToStorage();
+            syncMetaUI();
+            recalculateLeaderboardData();
+            closeModal('modalMatch');
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+                const rows = document.querySelectorAll('#matchEntryTableBody tr');
+                lines.slice(1).forEach(line => {
+                    const parts = line.split(',');
+                    const matchedTeam = state.teams.find(t => t.tag === parts[0].trim().toUpperCase());
+                    if (matchedTeam) {
+                        rows.forEach(row => {
+                            if (row.cells[0].getAttribute('data-team-id') === matchedTeam.id) {
+                                row.querySelector('.t-placement').value = parseInt(parts[1]) || 1;
+                                row.querySelector('.t-kills').value = parseInt(parts[2]) || 0;
+                                row.querySelector('.t-bonus').value = parseInt(parts[3]) || 0;
+                                row.querySelector('.t-penalty').value = parseInt(parts[4]) || 0;
+                            }
+                        });
+                    }
+                });
+            };
+            reader.readAsText(file);
+        }
+
+        function renderMatchHistoryList() {
+            const body = document.getElementById('matchHistoryTableBody');
+            body.innerHTML = '';
+            state.matches.forEach(match => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-2 font-bold text-white">#${match.matchNumber}</td>
+                    <td class="px-4 py-2 text-gray-300">${match.map}</td>
+                    <td class="px-4 py-2 text-[10px] text-gray-500 font-mono">${match.timestamp}</td>
+                    <td class="px-4 py-2 text-center"><button onclick="purgeMatch('${match.id}')" class="text-rose-500 p-1"><i data-lucide="trash" class="w-3.5 h-3.5 mx-auto"></i></button></td>
+                `;
+                body.appendChild(tr);
+            });
+            lucide.createIcons();
+            document.getElementById('statMatches').innerText = state.matches.length;
+        }
+
+        function purgeMatch(id) {
+            if(confirm("Purge match block?")) {
+                state.matches = state.matches.filter(m => m.id !== id);
+                saveStateToStorage();
+                syncMetaUI();
+                recalculateLeaderboardData();
+            }
+        }
+
+        let leaderboardData = [];
+        function recalculateLeaderboardData() {
+            let tracking = {};
+            state.teams.forEach(t => {
+                tracking[t.id] = { id: t.id, name: t.name, tag: t.tag, matchesPlayed: 0, wwcd: 0, placementPoints: 0, killPoints: 0, bonus: 0, penalty: 0, totalPoints: 0, rawKills: 0, history: [] };
+            });
+            let globalKills = 0;
+            state.matches.forEach(m => {
+                m.records.forEach(r => {
+                    let t = tracking[r.teamId];
+                    if(!t) return;
+                    t.matchesPlayed++;
+                    if(parseInt(r.placement) === 1) t.wwcd++;
+                    let pPoints = state.placementMatrix[r.placement] !== undefined ? state.placementMatrix[r.placement] : 0;
+                    let kPoints = r.kills * state.killPointValue;
+                    t.placementPoints += pPoints;
+                    t.killPoints += kPoints;
+                    t.rawKills += r.kills;
+                    t.bonus += r.bonus;
+                    t.penalty += r.penalty;
+                    globalKills += r.kills;
+                    t.totalPoints += (pPoints + kPoints + r.bonus - r.penalty);
+                    t.history.push(t.totalPoints);
+                });
+            });
+            document.getElementById('statKills').innerText = globalKills;
+            leaderboardData = Object.values(tracking).sort((a,b) => b.totalPoints - a.totalPoints || b.placementPoints - a.placementPoints || b.killPoints - a.killPoints);
+            renderLeaderboard();
+            updateDashboardCharts();
+            recalculateFinancials();
+        }
+
+        function recalculateFinancials() {
+            state.prizePool = parseFloat(document.getElementById('finPrizePool').value) || 0;
+            state.killBounty = parseFloat(document.getElementById('finKillBounty').value) || 0;
+            for(let i=1; i<=16; i++) {
+                const el = document.getElementById(`payoutPct_${i}`);
+                if(el) state.payoutPercentages[i] = parseFloat(el.value) || 0;
+            }
+            const body = document.getElementById('payoutTableBody');
+            body.innerHTML = '';
+            leaderboardData.forEach((team, idx) => {
+                const rank = idx + 1;
+                const base = ((state.payoutPercentages[rank] || 0) / 100) * state.prizePool;
+                const bounty = team.rawKills * state.killBounty;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-3 py-2 text-center font-bold text-gray-500">${rank}</td>
+                    <td class="px-4 py-2 font-bold text-white">${team.tag}</td>
+                    <td class="px-3 py-2 text-right font-mono">$${base.toFixed(0)}</td>
+                    <td class="px-3 py-2 text-right font-mono">$${bounty.toFixed(0)}</td>
+                    <td class="px-4 py-2 text-right font-mono text-emerald-400 font-bold bg-emerald-500/5">$${(base+bounty).toFixed(0)}</td>
+                `;
+                body.appendChild(tr);
+            });
+            document.getElementById('payoutSummaryText').innerText = `Base Pool Settings Active. Pool Ledger: $${state.prizePool.toLocaleString()}`;
+        }
+
+        function renderLeaderboard() {
+            const body = document.getElementById('leaderboardTableBody');
+            body.innerHTML = '';
+            const query = document.getElementById('lbSearch').value.toLowerCase().trim();
+            let filtered = leaderboardData.filter(t => t.tag.toLowerCase().includes(query) || t.name.toLowerCase().includes(query));
+            filtered.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-3 py-2.5 text-center font-extrabold text-gray-400">${index+1}</td>
+                    <td class="px-4 py-2.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] bg-gray-800 font-mono text-gray-400 px-1.5 py-0.5 rounded">${row.tag}</span>
+                            <span class="text-white font-bold truncate max-w-[120px]">${row.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-2 py-2.5 text-center font-mono text-gray-400">${row.matchesPlayed}</td>
+                    <td class="px-2 py-2.5 text-center font-mono text-amber-400 font-bold">${row.wwcd}</td>
+                    <td class="px-2 py-2.5 text-center font-mono text-gray-300">${row.placementPoints}</td>
+                    <td class="px-2 py-2.5 text-center font-mono text-gray-300">${row.killPoints}</td>
+                    <td class="px-2 py-2.5 text-center font-mono text-emerald-400">+${row.bonus}</td>
+                    <td class="px-2 py-2.5 text-center font-mono text-rose-400">-${row.penalty}</td>
+                    <td class="px-4 py-2.5 text-center text-indigo-400 font-extrabold bg-indigo-600/5 font-mono">${row.totalPoints}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        let trajectoryChartInstance = null;
+        let killDistChartInstance = null;
+        let placementRatioChartInstance = null;
+
+        function initCharts() {
+            const ctx = document.getElementById('dashTrajectoryChart').getContext('2d');
+            trajectoryChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#9ca3af', font: { size: 10 } } } },
+                    scales: { y: { grid: { color: '#1f2937' } }, x: { grid: { color: '#1f2937' } } }
+                }
+            });
+        }
+
+        function updateDashboardCharts() {
+            if(!trajectoryChartInstance) return;
+            const top5 = leaderboardData.slice(0, 5);
+            let maxMatches = 0;
+            top5.forEach(t => { if(t.history.length > maxMatches) maxMatches = t.history.length; });
+            let labels = Array.from({length: maxMatches}, (_, i) => `${i+1}`);
+            const colors = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+            trajectoryChartInstance.data.labels = labels;
+            trajectoryChartInstance.data.datasets = top5.map((team, idx) => ({
+                label: team.tag, data: team.history, borderColor: colors[idx % 5], tension: 0.15, pointRadius: 2, borderWidth: 2
+            }));
+            trajectoryChartInstance.update();
+        }
+
+        function updateAnalyticsCharts() {
+            const ctxKill = document.getElementById('chartKillDistribution').getContext('2d');
+            const ctxPlace = document.getElementById('chartPlacementRatios').getContext('2d');
+            if(killDistChartInstance) killDistChartInstance.destroy();
+            if(placementRatioChartInstance) placementRatioChartInstance.destroy();
+            const labels = leaderboardData.map(t => t.tag);
+            killDistChartInstance = new Chart(ctxKill, {
+                type: 'bar', data: { labels, datasets: [{ data: leaderboardData.map(t => t.killPoints), backgroundColor: '#6366f1' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+            placementRatioChartInstance = new Chart(ctxPlace, {
+                type: 'bar', data: { labels, datasets: [{ data: leaderboardData.map(t => t.placementPoints), backgroundColor: '#10b981' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function exportToCSV() {
+            let csv = "Rank,Tag,Points\n";
+            leaderboardData.forEach((row, idx) => { csv += `${idx+1},${row.tag},${row.totalPoints}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Standings.csv`);
+            a.click();
+        }
+
+        function exportToJSON() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `DatabaseBackup.json`);
+            a.click();
+        }
+    </script>
+</body>
+</html>
