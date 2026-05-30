@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexRank Pro | Tournament & Financial Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #111827; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <header class="border-b border-gray-800 bg-gray-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="bg-indigo-600 p-2.5 rounded-xl text-white shadow-lg shadow-indigo-600/30">
+                <i data-lucide="trophy" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">ApexRank Pro</h1>
+                <p class="text-xs text-gray-400 font-medium">Esports Production & Financial Suite</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="bg-gray-800/80 border border-gray-700/50 rounded-xl px-4 py-2 flex items-center gap-3 text-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="font-semibold text-gray-200" id="navTournamentName">Ultimate Championship</span>
+                <span class="text-gray-500">|</span>
+                <span class="text-xs uppercase tracking-wider font-bold text-indigo-400" id="navGameName">BGMI</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-64 border-r border-gray-800 bg-gray-900/20 p-4 flex flex-col gap-1 shrink-0">
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Management</p>
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn active flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 w-full text-left">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </button>
+            <button onclick="switchTab('teams')" id="btn-teams" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="users" class="w-4 h-4"></i> Team Roster
+            </button>
+            <button onclick="switchTab('scoring')" id="btn-scoring" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="sliders" class="w-4 h-4"></i> Point Matrix
+            </button>
+            <button onclick="switchTab('matches')" id="btn-matches" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="swords" class="w-4 h-4"></i> Match Entry
+            </button>
+            
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-3 mt-4 mb-2">Financials</p>
+            <button onclick="switchTab('payouts')" id="btn-payouts" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="dollar-sign" class="w-4 h-4"></i> Prize Pool & Payouts
+            </button>
+            
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-3 mt-4 mb-2">Outputs</p>
+            <button onclick="switchTab('leaderboard')" id="btn-leaderboard" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="list-ordered" class="w-4 h-4"></i> Live Leaderboard
+            </button>
+            <button onclick="switchTab('analytics')" id="btn-analytics" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Analytics Engine
+            </button>
+            <button onclick="switchTab('export')" id="btn-export" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-400 hover:bg-gray-800/50 hover:text-gray-200 w-full text-left">
+                <i data-lucide="download" class="w-4 h-4"></i> Export Suite
+            </button>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            
+            <section id="tab-dashboard" class="tab-content active space-y-8">
+                <div class="flex justify-between items-center bg-gradient-to-r from-gray-900 to-indigo-950/40 border border-gray-800 p-6 rounded-2xl">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1" id="dashMetaTitle">Ultimate Championship</h2>
+                        <p class="text-sm text-gray-400">Setup configuration, tournament telemetry, and performance controls.</p>
+                    </div>
+                    <button onclick="openModal('modalTournamentSetup')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-indigo-600/20">
+                        <i data-lucide="settings" class="w-4 h-4"></i> Configure Tournament
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div class="bg-gray-900/50 border border-gray-800 p-5 rounded-2xl flex items-center gap-4">
+                        <div class="bg-indigo-500/10 text-indigo-400 p-3 rounded-xl"><i data-lucide="shield" class="w-6 h-6"></i></div>
+                        <div><p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Registered Teams</p><h3 class="text-2xl font-bold mt-0.5 text-white" id="statTeams">0</h3></div>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 p-5 rounded-2xl flex items-center gap-4">
+                        <div class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl"><i data-lucide="activity" class="w-6 h-6"></i></div>
+                        <div><p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Matches Tracked</p><h3 class="text-2xl font-bold mt-0.5 text-white" id="statMatches">0</h3></div>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 p-5 rounded-2xl flex items-center gap-4">
+                        <div class="bg-amber-500/10 text-amber-400 p-3 rounded-xl"><i data-lucide="zap" class="w-6 h-6"></i></div>
+                        <div><p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Kills</p><h3 class="text-2xl font-bold mt-0.5 text-white" id="statKills">0</h3></div>
+                    </div>
+                    <div class="bg-gray-900/50 border border-gray-800 p-5 rounded-2xl flex items-center gap-4">
+                        <div class="bg-purple-500/10 text-purple-400 p-3 rounded-xl"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
+                        <div><p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Prize Pool</p><h3 class="text-2xl font-bold mt-0.5 text-white" id="statTotalPrize">$10,000</h3></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800/80 rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-lg text-white flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-indigo-400"></i> Standings Trajectory</h3>
+                            <span class="text-xs bg-gray-800 text-gray-400 px-2.5 py-1 rounded-full font-medium" id="statTopTeam">Top 5 Teams</span>
+                        </div>
+                        <div class="h-[280px] w-full"><canvas id="dashTrajectoryChart"></canvas></div>
+                    </div>
+                    <div class="bg-gray-900/30 border border-gray-800/80 rounded-2xl p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i> Rules & Metadata</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between border-b border-gray-800 pb-2"><span class="text-gray-400">Format:</span><span class="font-medium text-gray-200" id="dashMetaFormat">Squad</span></div>
+                                <div class="flex justify-between border-b border-gray-800 pb-2"><span class="text-gray-400">Total Pipeline:</span><span class="font-medium text-gray-200" id="dashMetaMatches">10 Matches</span></div>
+                                <div class="flex justify-between border-b border-gray-800 pb-2"><span class="text-gray-400">Organizer:</span><span class="font-medium text-gray-200" id="dashMetaOrg">Apex Ops</span></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-indigo-950/20 border border-indigo-900/30 rounded-xl text-xs text-indigo-300 leading-relaxed">
+                            <strong>System Operational Note:</strong> Financial and point calculations process synchronously across unified tie-breaking arrays to output clean billing/payout configurations.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-teams" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-800 pb-5">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Roster Control Center</h2>
+                        <p class="text-sm text-gray-400">Manage participating organizations, tags, and tracking metrics.</p>
+                    </div>
+                    <button onclick="openModal('modalTeam')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 self-start sm:self-auto"><i data-lucide="plus" class="w-4 h-4"></i> Add Organization</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="teamsContainer"></div>
+            </section>
+
+            <section id="tab-scoring" class="tab-content space-y-6">
+                <div class="border-b border-gray-800 pb-5">
+                    <h2 class="text-2xl font-bold text-white">Point Matrix Configuration</h2>
+                    <p class="text-sm text-gray-400">Define point distributions across placements and execution dynamics.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="bg-gray-900/50 border border-gray-800 p-6 rounded-2xl h-fit space-y-4">
+                        <h3 class="font-bold text-base text-white">Presets</h3>
+                        <div class="grid grid-cols-1 gap-2.5">
+                            <button onclick="applyPreset('bgmi')" class="w-full text-left px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 hover:border-indigo-500 text-sm font-medium transition flex items-center justify-between"><span>BGMI / PUBG Standard (15pt)</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-500"></i></button>
+                            <button onclick="applyPreset('ff')" class="w-full text-left px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 hover:border-indigo-500 text-sm font-medium transition flex items-center justify-between"><span>Free Fire Standard (12pt)</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-500"></i></button>
+                            <button onclick="applyPreset('valorant')" class="w-full text-left px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 hover:border-indigo-500 text-sm font-medium transition flex items-center justify-between"><span>Valorant Round Metric</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-500"></i></button>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800 p-6 rounded-2xl space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Kill Point Value</label><input type="number" id="cfgKillPoints" value="1" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"></div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-300 mb-3">Placement Distribution Matrix</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="matrixContainer"></div>
+                        </div>
+                        <div class="flex justify-end pt-4 border-t border-gray-800"><button onclick="saveMatrix()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Global Configuration</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-matches" class="tab-content space-y-6">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-5">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Match Telemetry Portal</h2>
+                        <p class="text-sm text-gray-400">Input execution metrics per match for instantaneous table compilation.</p>
+                    </div>
+                    <button onclick="openModal('modalMatch')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Record New Match</button>
+                </div>
+                <div class="bg-gray-900/30 border border-gray-800 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-900/80 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                <th class="px-6 py-4">Match ID</th>
+                                <th class="px-6 py-4">Map Location</th>
+                                <th class="px-6 py-4">Execution Timestamp</th>
+                                <th class="px-6 py-4 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchHistoryTableBody" class="text-sm text-gray-300 divide-y divide-gray-800/50"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tab-payouts" class="tab-content space-y-6">
+                <div class="border-b border-gray-800 pb-5">
+                    <h2 class="text-2xl font-bold text-white">Prize Pool & Financial Distribution</h2>
+                    <p class="text-sm text-gray-400">Manage financial parameters, rank allocations, and kill-bounties.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-900/40 border border-gray-800 p-6 rounded-2xl space-y-4 h-fit">
+                        <h3 class="font-bold text-base text-white">Allocation Rules</h3>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Total Prize Pool ($)</label>
+                            <input type="number" id="finPrizePool" value="10000" oninput="recalculateFinancials()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Kill Bounty Reward ($ Per Kill)</label>
+                            <input type="number" id="finKillBounty" value="10" oninput="recalculateFinancials()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Rank Cut Distribution (%)</h4>
+                            <div class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar pr-1" id="payoutPercentageContainer">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-gray-900/30 border border-gray-800 rounded-2xl overflow-hidden">
+                        <div class="p-4 bg-gray-900/80 border-b border-gray-800 flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-white">Calculated Team Payout Ledger</h3>
+                            <span class="text-xs text-indigo-400 font-medium" id="payoutSummaryText">Total Distributed: $0 / $10,000</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-950/40 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                        <th class="px-4 py-3 text-center">Rank</th>
+                                        <th class="px-6 py-3">Team</th>
+                                        <th class="px-4 py-3 text-right">Rank Base Pay</th>
+                                        <th class="px-4 py-3 text-right">Kill Bounty Pay</th>
+                                        <th class="px-6 py-3 text-right text-emerald-400">Gross Earnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payoutTableBody" class="text-sm divide-y divide-gray-800/40 text-gray-300 font-medium">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-leaderboard" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-800 pb-5">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Live Dashboard Standings</h2>
+                        <p class="text-sm text-gray-400">Automated multi-rule tie-breaking architecture execution.</p>
+                    </div>
+                    <div class="flex items-center gap-3"><div class="relative"><i data-lucide="search" class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5"></i><input type="text" id="lbSearch" oninput="renderLeaderboard()" placeholder="Filter via tag..." class="bg-gray-900 border border-gray-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 w-56"></div></div>
+                </div>
+                <div class="bg-gray-900/30 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-900/80 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
+                                    <th class="px-4 py-4 text-center w-16">Rank</th>
+                                    <th class="px-6 py-4">Team</th>
+                                    <th class="px-4 py-4 text-center">Matches</th>
+                                    <th class="px-4 py-4 text-center text-amber-400">WWCD</th>
+                                    <th class="px-4 py-4 text-center">Placement Pts</th>
+                                    <th class="px-4 py-4 text-center">Kill Pts</th>
+                                    <th class="px-4 py-4 text-center text-emerald-400">Bonus</th>
+                                    <th class="px-4 py-4 text-center text-rose-400">Penalty</th>
+                                    <th class="px-6 py-4 text-center text-indigo-400 font-extrabold bg-indigo-600/5 w-28">Total Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardTableBody" class="text-sm font-medium text-gray-300 divide-y divide-gray-800/50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-analytics" class="tab-content space-y-8">
+                <div class="border-b border-gray-800 pb-5">
+                    <h2 class="text-2xl font-bold text-white">Advanced Intelligence Engine</h2>
+                    <p class="text-sm text-gray-400">Granular diagnostics across execution phases and team telemetry.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-900/30 border border-gray-800 p-6 rounded-2xl"><h3 class="font-bold text-base text-white mb-4">Cumulative Performance Matrix</h3><div class="h-72"><canvas id="chartKillDistribution"></canvas></div></div>
+                    <div class="bg-gray-900/30 border border-gray-800 p-6 rounded-2xl"><h3 class="font-bold text-base text-white mb-4">Placement Consistency Ratios</h3><div class="h-72"><canvas id="chartPlacementRatios"></canvas></div></div>
+                </div>
+            </section>
+
+            <section id="tab-export" class="tab-content space-y-6">
+                <div class="border-b border-gray-800 pb-5">
+                    <h2 class="text-2xl font-bold text-white">Broadcast Export Suite</h2>
+                    <p class="text-sm text-gray-400">Extract raw database sheets or optimized visualization payloads.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                    <div class="bg-gray-900/40 border border-gray-800 p-6 rounded-2xl flex flex-col justify-between items-start gap-4">
+                        <div>
+                            <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl w-fit mb-3"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i></div>
+                            <h3 class="font-bold text-base text-white mb-1">CSV Dataset Ledger</h3>
+                            <p class="text-sm text-gray-400">Export the current leaderboard data into a clean, system-agnostic CSV layout.</p>
+                        </div>
+                        <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 w-full justify-center"><i data-lucide="download" class="w-4 h-4"></i> Download CSV Ledger</button>
+                    </div>
+                    <div class="bg-gray-900/40 border border-gray-800 p-6 rounded-2xl flex flex-col justify-between items-start gap-4">
+                        <div>
+                            <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl w-fit mb-3"><i data-lucide="code" class="w-6 h-6"></i></div>
+                            <h3 class="font-bold text-base text-white mb-1">JSON Backup Data</h3>
+                            <p class="text-sm text-gray-400">Generate structured data payloads for transfer, integrations, or raw backups.</p>
+                        </div>
+                        <button onclick="exportToJSON()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 w-full justify-center"><i data-lucide="braces" class="w-4 h-4"></i> Download JSON Object</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modalTournamentSetup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-lg p-6 space-y-4">
+            <h3 class="font-bold text-lg text-white">Global Tournament Configuration</h3>
+            <div class="space-y-3">
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Tournament Name</label><input type="text" id="setupName" value="Ultimate Championship" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Title Target Game</label><input type="text" id="setupGame" value="BGMI" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Format Type</label><select id="setupFormat" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"><option>Solo</option><option>Duo</option><option selected>Squad</option></select></div>
+                    <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Pipeline Size</label><input type="number" id="setupMatches" value="10" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                </div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Organizer Branding Tag</label><input type="text" id="setupOrg" value="Apex Ops" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2"><button onclick="closeModal('modalTournamentSetup')" class="bg-gray-800 text-gray-300 font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition">Cancel</button><button onclick="saveTournamentSetup()" class="bg-indigo-600 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:bg-indigo-500 transition">Apply Changes</button></div>
+        </div>
+    </div>
+
+    <div id="modalTeam" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6 space-y-4">
+            <h3 class="font-bold text-lg text-white">Register Competitor Organization</h3>
+            <div class="space-y-3">
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Organization Name</label><input type="text" id="teamName" placeholder="e.g., GodLike Esports" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Identifier Tag</label><input type="text" id="teamTag" placeholder="e.g., GOD" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Captain Alias</label><input type="text" id="teamCaptain" placeholder="e.g., Jonathan" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2"><button onclick="closeModal('modalTeam')" class="bg-gray-800 text-gray-300 font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition">Cancel</button><button onclick="registerTeam()" class="bg-indigo-600 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:bg-indigo-500 transition">Commit Roster</button></div>
+        </div>
+    </div>
+
+    <div id="modalMatch" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-4xl p-6 space-y-4 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-lg text-white">Log Match Execution Metrics</h3>
+                <span class="text-xs text-amber-400 font-semibold bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">Verify Point Matrix parameters prior to committing</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 bg-gray-950 p-4 rounded-xl border border-gray-800/80">
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Map Vector Designation</label><input type="text" id="matchMap" value="Erangel" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Execution Index</label><input type="number" id="matchNumber" value="1" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-white text-sm focus:outline-none focus:border-indigo-500"></div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-800/50 rounded-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-950 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800 sticky top-0 z-10">
+                            <th class="px-4 py-3">Team</th>
+                            <th class="px-4 py-3 w-28">Rank Finish</th>
+                            <th class="px-4 py-3 w-24">Elims (Kills)</th>
+                            <th class="px-4 py-3 w-24">Bonus Pts</th>
+                            <th class="px-4 py-3 w-24">Penalty Det</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matchEntryTableBody" class="divide-y divide-gray-800/40 text-sm bg-gray-900/20"></tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-gray-800 shrink-0">
+                <div class="flex items-center gap-2">
+                    <label class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs px-3 py-2 rounded-xl cursor-pointer transition flex items-center gap-1">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i> CSV Bulk Load
+                        <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                    </label>
+                </div>
+                <div class="flex gap-3"><button onclick="closeModal('modalMatch')" class="bg-gray-800 text-gray-300 font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition">Cancel</button><button onclick="commitMatch()" class="bg-indigo-600 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:bg-indigo-500 transition">Commit Logs</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GLOBAL SYSTEM STATE ENGINE WITH FINANCIAL MODULE
+        let state = {
+            tournament: { name: "Ultimate Championship", game: "BGMI", type: "Squad", totalMatches: 10, organizer: "Apex Ops" },
+            placementMatrix: { 1:15, 2:12, 3:10, 4:8, 5:6, 6:4, 7:2, 8:1, 9:1, 10:1, 11:1, 12:1, 13:0, 14:0, 15:0, 16:0 },
+            killPointValue: 1,
+            prizePool: 10000,
+            killBounty: 10,
+            payoutPercentages: { 1:40, 2:25, 3:15, 4:10, 5:5, 6:5, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 },
+            teams: [],
+            matches: []
+        };
+
+        // CORE SYSTEM INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadStateFromStorage();
+            if(state.teams.length === 0) seedDemoDatabase();
+            syncMetaUI();
+            buildMatrixConfigUI();
+            buildPayoutConfigUI();
+            recalculateLeaderboardData();
+            initCharts();
+        });
+
+        function openModal(id) { 
+            document.getElementById(id).classList.remove('hidden'); 
+            if(id === 'modalMatch') populateMatchEntryForm();
+        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('text-indigo-400', 'bg-indigo-600/10', 'border', 'border-indigo-500/20');
+                el.classList.add('text-gray-400');
+            });
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-gray-400');
+            activeBtn.classList.add('text-indigo-400', 'bg-indigo-600/10', 'border', 'border-indigo-500/20');
+            
+            if(tabId === 'analytics') updateAnalyticsCharts();
+            if(tabId === 'payouts') recalculateFinancials();
+        }
+
+        // PERSISTENCE HOOKS
+        function saveStateToStorage() { localStorage.setItem('apexrank_state', JSON.stringify(state)); }
+        function loadStateFromStorage() {
+            const saved = localStorage.getItem('apexrank_state');
+            if(saved) {
+                try { 
+                    state = JSON.parse(saved); 
+                    if(!state.matches) state.matches = [];
+                    if(!state.prizePool) state.prizePool = 10000;
+                    if(!state.killBounty) state.killBounty = 10;
+                    if(!state.payoutPercentages) state.payoutPercentages = { 1:40, 2:25, 3:15, 4:10, 5:5, 6:5, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 };
+                } catch(e) { console.error("Cache parsing error, resetting state mapping structural indices."); }
+            }
+        }
+
+        function seedDemoDatabase() {
+            state.teams = [
+                { id: "t1", name: "Team Soul", tag: "SOUL", captain: "Mortal" },
+                { id: "t2", name: "GodLike Esports", tag: "GOD", captain: "Jonathan" },
+                { id: "t3", name: "Team XSpark", tag: "TX", captain: "Scout" },
+                { id: "t4", name: "Global Esports", tag: "GE", captain: "Mavi" },
+                { id: "t5", name: "Entity Gaming", tag: "ENT", captain: "Saumraj" },
+                { id: "t6", name: "Revenant Esports", tag: "RNT", captain: "Sensei" }
+            ];
+            
+            state.matches = [
+                {
+                    id: "m1", matchNumber: 1, map: "Erangel", timestamp: new Date().toLocaleString(),
+                    records: [
+                        { teamId: "t1", placement: 1, kills: 5, bonus: 2, penalty: 0 },
+                        { teamId: "t2", placement: 2, kills: 3, bonus: 0, penalty: 0 },
+                        { teamId: "t3", placement: 3, kills: 2, bonus: 0, penalty: 0 },
+                        { teamId: "t4", placement: 4, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t6", placement: 6, kills: 0, bonus: 0, penalty: 0 }
+                    ]
+                },
+                {
+                    id: "m2", matchNumber: 2, map: "Miramar", timestamp: new Date().toLocaleString(),
+                    records: [
+                        { teamId: "t1", placement: 1, kills: 4, bonus: 0, penalty: 0 },
+                        { teamId: "t2", placement: 2, kills: 3, bonus: 0, penalty: 0 },
+                        { teamId: "t3", placement: 3, kills: 2, bonus: 0, penalty: 0 },
+                        { teamId: "t4", placement: 4, kills: 2, bonus: 0, penalty: 0 },
+                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t6", placement: 6, kills: 1, bonus: 0, penalty: 0 }
+                    ]
+                },
+                {
+                    id: "m3", matchNumber: 3, map: "Sanhok", timestamp: new Date().toLocaleString(),
+                    records: [
+                        { teamId: "t1", placement: 1, kills: 3, bonus: 0, penalty: 0 },
+                        { teamId: "t2", placement: 2, kills: 2, bonus: 0, penalty: 0 },
+                        { teamId: "t3", placement: 3, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t4", placement: 4, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
+                        { teamId: "t6", placement: 6, kills: 0, bonus: 0, penalty: 0 }
+                    ]
+                }
+            ];
+            saveStateToStorage();
+        }
+
+        function syncMetaUI() {
+            document.getElementById('navTournamentName').innerText = state.tournament.name;
+            document.getElementById('navGameName').innerText = state.tournament.game;
+            document.getElementById('dashMetaTitle').innerText = state.tournament.name;
+            document.getElementById('dashMetaFormat').innerText = state.tournament.type;
+            document.getElementById('dashMetaMatches').innerText = `${state.tournament.totalMatches} Matches`;
+            document.getElementById('dashMetaOrg').innerText = state.tournament.organizer;
+            document.getElementById('statTotalPrize').innerText = `$${state.prizePool.toLocaleString()}`;
+            document.getElementById('finPrizePool').value = state.prizePool;
+            document.getElementById('finKillBounty').value = state.killBounty;
+            renderTeamsDashboardView();
+            renderMatchHistoryList();
+            renderLeaderboard();
+        }
+
+        function saveTournamentSetup() {
+            state.tournament.name = document.getElementById('setupName').value;
+            state.tournament.game = document.getElementById('setupGame').value;
+            state.tournament.type = document.getElementById('setupFormat').value;
+            state.tournament.totalMatches = parseInt(document.getElementById('setupMatches').value) || 10;
+            state.tournament.organizer = document.getElementById('setupOrg').value;
+            saveStateToStorage();
+            syncMetaUI();
+            closeModal('modalTournamentSetup');
+        }
+
+        // ROSTER LOGIC
+        function renderTeamsDashboardView() {
+            const container = document.getElementById('teamsContainer');
+            container.innerHTML = '';
+            state.teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-900/50 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between hover:border-gray-700 transition";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-500/10 text-indigo-400 rounded-md border border-indigo-500/10">${team.tag}</span>
+                            <button onclick="removeTeam('${team.id}')" class="text-gray-500 hover:text-rose-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                        <h4 class="font-bold text-lg text-white mb-1">${team.name}</h4>
+                        <p class="text-xs text-gray-400 flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5"></i> Cpt: ${team.captain}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+            document.getElementById('statTeams').innerText = state.teams.length;
+        }
+
+        function registerTeam() {
+            const name = document.getElementById('teamName').value.trim();
+            const tag = document.getElementById('teamTag').value.trim().toUpperCase();
+            const captain = document.getElementById('teamCaptain').value.trim();
+            if(!name || !tag) return alert("Organization metadata parameters are incomplete.");
+            
+            state.teams.push({ id: 't_' + Date.now(), name, tag, captain: captain || "Unassigned" });
+            saveStateToStorage();
+            syncMetaUI();
+            recalculateLeaderboardData();
+            closeModal('modalTeam');
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamTag').value = '';
+            document.getElementById('teamCaptain').value = '';
+        }
+
+        function removeTeam(id) {
+            if(confirm("Confirm removal of this team structure? This will clear related past historical match arrays.")) {
+                state.teams = state.teams.filter(t => t.id !== id);
+                state.matches.forEach(m => { m.records = m.records.filter(r => r.teamId !== id); });
+                saveStateToStorage();
+                syncMetaUI();
+                recalculateLeaderboardData();
+            }
+        }
+
+        // MATRIX SYSTEM DYNAMICS
+        function buildMatrixConfigUI() {
+            const container = document.getElementById('matrixContainer');
+            container.innerHTML = '';
+            document.getElementById('cfgKillPoints').value = state.killPointValue;
+            for(let i=1; i<=16; i++) {
+                const div = document.createElement('div');
+                div.className = "bg-gray-950 p-2.5 border border-gray-800 rounded-xl flex items-center gap-2";
+                div.innerHTML = `<span class="text-xs font-bold text-gray-500 w-6 text-right">${i}#</span><input type="number" id="pMatrix_${i}" value="${state.placementMatrix[i] !== undefined ? state.placementMatrix[i] : 0}" class="w-full bg-gray-900 text-center rounded-md py-1 border border-gray-700 text-sm font-semibold text-white focus:outline-none focus:border-indigo-500">`;
+                container.appendChild(div);
+            }
+        }
+
+        function buildPayoutConfigUI() {
+            const container = document.getElementById('payoutPercentageContainer');
+            container.innerHTML = '';
+            for(let i=1; i<=16; i++) {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-gray-950 p-2 border border-gray-800/60 rounded-xl text-xs px-3";
+                div.innerHTML = `
+                    <span class="font-bold text-gray-400">Rank #${i}</span>
+                    <div class="flex items-center gap-1">
+                        <input type="number" id="payoutPct_${i}" value="${state.payoutPercentages[i] || 0}" oninput="recalculateFinancials()" class="w-14 bg-gray-900 text-center rounded border border-gray-700 py-0.5 text-white font-semibold focus:outline-none focus:border-indigo-500">
+                        <span class="text-gray-500 font-bold">%</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function applyPreset(type) {
+            if(type === 'bgmi') {
+                state.placementMatrix = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:4, 7:2, 8:1, 9:1, 10:1, 11:1, 12:1, 13:0, 14:0, 15:0, 16:0 };
+                state.killPointValue = 1;
+            } else if(type === 'ff') {
+                state.placementMatrix = { 1:12, 2:9, 3:8, 4:7, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 };
+                state.killPointValue = 1;
+            } else if(type === 'valorant') {
+                state.placementMatrix = { 1:10, 2:5, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0 };
+                state.killPointValue = 2;
+            }
+            buildMatrixConfigUI();
+        }
+
+        function saveMatrix() {
+            state.killPointValue = parseInt(document.getElementById('cfgKillPoints').value) || 0;
+            for(let i=1; i<=16; i++) {
+                state.placementMatrix[i] = parseInt(document.getElementById(`pMatrix_${i}`).value) || 0;
+            }
+            saveStateToStorage();
+            recalculateLeaderboardData();
+            alert("Global Configuration saved. Leaderboards compiled successfully.");
+        }
+
+        // TELEMETRY LOG ENTRY MANAGEMENT
+        function populateMatchEntryForm() {
+            const body = document.getElementById('matchEntryTableBody');
+            body.innerHTML = '';
+            document.getElementById('matchNumber').value = state.matches.length + 1;
+            if(state.teams.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500 font-medium">No registered teams found. Construct a roster schema first.</td></tr>`;
+                return;
+            }
+            state.teams.forEach(team => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-800/40 hover:bg-gray-800/20 transition";
+                tr.innerHTML = `
+                    <td class="px-4 py-2.5 font-bold text-white" data-team-id="${team.id}">${team.name}</td>
+                    <td class="px-4 py-2.5"><input type="number" class="t-placement w-20 bg-gray-950 border border-gray-700 text-center py-1 rounded-md text-white font-bold" min="1" max="16" value="1"></td>
+                    <td class="px-4 py-2.5"><input type="number" class="t-kills w-20 bg-gray-950 border border-gray-700 text-center py-1 rounded-md text-white font-bold" min="0" value="0"></td>
+                    <td class="px-4 py-2.5"><input type="number" class="t-bonus w-20 bg-gray-950 border border-gray-700 text-center py-1 rounded-md text-emerald-400 font-bold" min="0" value="0"></td>
+                    <td class="px-4 py-2.5"><input type="number" class="t-penalty w-20 bg-gray-950 border border-gray-700 text-center py-1 rounded-md text-rose-400 font-bold" min="0" value="0"></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function commitMatch() {
+            const map = document.getElementById('matchMap').value.trim() || "Unknown Map";
+            const matchNumber = parseInt(document.getElementById('matchNumber').value) || (state.matches.length + 1);
+            const rows = document.querySelectorAll('#matchEntryTableBody tr');
+            const records = [];
+            
+            rows.forEach(row => {
+                const teamId = row.cells[0].getAttribute('data-team-id');
+                if(!teamId) return;
+                const placement = parseInt(row.querySelector('.t-placement').value) || 16;
+                const kills = parseInt(row.querySelector('.t-kills').value) || 0;
+                const bonus = parseInt(row.querySelector('.t-bonus').value) || 0;
+                const penalty = parseInt(row.querySelector('.t-penalty').value) || 0;
+                records.push({ teamId, placement, kills, bonus, penalty });
+            });
+
+            state.matches.push({ id: 'm_' + Date.now(), matchNumber, map, timestamp: new Date().toLocaleString(), records });
+            saveStateToStorage();
+            syncMetaUI();
+            recalculateLeaderboardData();
+            closeModal('modalMatch');
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+                if (lines.length <= 1) return alert("Insufficient records in CSV template configuration file.");
+                
+                const rows = document.querySelectorAll('#matchEntryTableBody tr');
+                let parsedCount = 0;
+
+                lines.slice(1).forEach(line => {
+                    const parts = line.split(',');
+                    if (parts.length < 3) return;
+                    const tag = parts[0].trim().toUpperCase();
+                    const placement = parseInt(parts[1]) || 1;
+                    const kills = parseInt(parts[2]) || 0;
+                    const bonus = parseInt(parts[3]) || 0;
+                    const penalty = parseInt(parts[4]) || 0;
+
+                    const matchedTeam = state.teams.find(t => t.tag === tag);
+                    if (matchedTeam) {
+                        rows.forEach(row => {
+                            if (row.cells[0].getAttribute('data-team-id') === matchedTeam.id) {
+                                row.querySelector('.t-placement').value = placement;
+                                row.querySelector('.t-kills').value = kills;
+                                row.querySelector('.t-bonus').value = bonus;
+                                row.querySelector('.t-penalty').value = penalty;
+                                parsedCount++;
+                            }
+                        });
+                    }
+                });
+                alert(`Successfully matched and populated data metrics for ${parsedCount} team profiles.`);
+            };
+            reader.readAsText(file);
+        }
+
+        function renderMatchHistoryList() {
+            const body = document.getElementById('matchHistoryTableBody');
+            body.innerHTML = '';
+            if(state.matches.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 font-medium">No historical match vectors verified in compilation memory pipeline.</td></tr>`;
+                return;
+            }
+            state.matches.forEach(match => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/10 transition";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-white">Match #${match.matchNumber}</td>
+                    <td class="px-6 py-4 font-semibold text-gray-300">${match.map}</td>
+                    <td class="px-6 py-4 text-xs text-gray-400 font-mono">${match.timestamp}</td>
+                    <td class="px-6 py-4 text-center"><button onclick="purgeMatch('${match.id}')" class="text-gray-500 hover:text-rose-400 transition"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
+                `;
+                body.appendChild(tr);
+            });
+            lucide.createIcons();
+            document.getElementById('statMatches').innerText = state.matches.length;
+        }
+
+        function purgeMatch(id) {
+            if(confirm("Purge selected match dataset matrix? This recalculates global standings tables instantaneously.")) {
+                state.matches = state.matches.filter(m => m.id !== id);
+                saveStateToStorage();
+                syncMetaUI();
+                recalculateLeaderboardData();
+            }
+        }
+
+        // LEADERBOARD TIED-LOGIC CALCULATION COMPILER
+        let leaderboardData = [];
+        function recalculateLeaderboardData() {
+            let tracking = {};
+            state.teams.forEach(t => {
+                tracking[t.id] = { 
+                    id: t.id, name: t.name, tag: t.tag, matchesPlayed: 0, 
+                    wwcd: 0, placementPoints: 0, killPoints: 0, bonus: 0, penalty: 0, totalPoints: 0,
+                    rawKills: 0, history: []
+                };
+            });
+
+            let globalTotalKills = 0;
+            state.matches.forEach(match => {
+                match.records.forEach(rec => {
+                    if(!tracking[rec.teamId]) return;
+                    let tObj = tracking[rec.teamId];
+                    tObj.matchesPlayed++;
+                    if(parseInt(rec.placement) === 1) tObj.wwcd++;
+                    
+                    let pPoints = state.placementMatrix[rec.placement] !== undefined ? state.placementMatrix[rec.placement] : 0;
+                    let kPoints = rec.kills * state.killPointValue;
+                    
+                    tObj.placementPoints += pPoints;
+                    tObj.killPoints += kPoints;
+                    tObj.rawKills += rec.kills;
+                    tObj.bonus += rec.bonus;
+                    tObj.penalty += rec.penalty;
+                    globalTotalKills += rec.kills;
+                    
+                    let mTotal = pPoints + kPoints + rec.bonus - rec.penalty;
+                    tObj.totalPoints += mTotal;
+                    tObj.history.push(tObj.totalPoints);
+                });
+            });
+
+            document.getElementById('statKills').innerText = globalTotalKills;
+
+            // COMPILE TIED-LOGIC ARRAYS
+            leaderboardData = Object.values(tracking);
+            leaderboardData.sort((a, b) => {
+                if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+                if (b.placementPoints !== a.placementPoints) return b.placementPoints - a.placementPoints;
+                if (b.killPoints !== a.killPoints) return b.killPoints - a.killPoints;
+                if (b.wwcd !== a.wwcd) return b.wwcd - a.wwcd;
+                return 0;
+            });
+
+            document.getElementById('statTopTeam').innerText = leaderboardData[0] && leaderboardData[0].totalPoints > 0 ? "Leader: " + leaderboardData[0].name : "Top 5 Teams";
+            renderLeaderboard();
+            updateDashboardCharts();
+            recalculateFinancials();
+        }
+
+        // FINANCIAL MODULE CALCULATION ENGINE
+        function recalculateFinancials() {
+            const totalPoolInput = parseFloat(document.getElementById('finPrizePool').value) || 0;
+            const killBountyInput = parseFloat(document.getElementById('finKillBounty').value) || 0;
+            
+            state.prizePool = totalPoolInput;
+            state.killBounty = killBountyInput;
+            document.getElementById('statTotalPrize').innerText = `$${state.prizePool.toLocaleString()}`;
+
+            // Sync structural percentage inputs inside configuration array
+            let validatedPercentagesTotal = 0;
+            for(let i=1; i<=16; i++) {
+                const el = document.getElementById(`payoutPct_${i}`);
+                if(el) {
+                    state.payoutPercentages[i] = parseFloat(el.value) || 0;
+                    validatedPercentagesTotal += state.payoutPercentages[i];
+                }
+            }
+
+            const payoutTableBody = document.getElementById('payoutTableBody');
+            payoutTableBody.innerHTML = '';
+
+            let distributedBaseTotal = 0;
+
+            // Map payment payouts based cleanly off current standings arrays
+            leaderboardData.forEach((team, index) => {
+                const currentRank = index + 1;
+                const percentageCut = state.payoutPercentages[currentRank] || 0;
+                
+                const baseRankPayout = (percentageCut / 100) * state.prizePool;
+                const killBountyPayout = team.rawKills * state.killBounty;
+                const grossEarnings = baseRankPayout + killBountyPayout;
+
+                distributedBaseTotal += baseRankPayout;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/20 transition font-medium border-b border-gray-800/40";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-center text-gray-400 font-bold font-mono">${currentRank}</td>
+                    <td class="px-6 py-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs bg-gray-800 font-mono text-gray-400 px-2 py-0.5 rounded border border-gray-700/30">${team.tag}</span>
+                            <span class="text-white font-semibold">${team.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-right font-mono text-gray-300">$${baseRankPayout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span class="text-xs text-gray-500">(${percentageCut}%)</span></td>
+                    <td class="px-4 py-3 text-right font-mono text-gray-300">$${killBountyPayout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span class="text-xs text-gray-500">(${team.rawKills} kills)</span></td>
+                    <td class="px-6 py-3 text-right font-mono text-emerald-400 font-bold bg-emerald-500/5">$${grossEarnings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                `;
+                payoutTableBody.appendChild(tr);
+            });
+
+            document.getElementById('payoutSummaryText').innerText = `Base Pool Allocated: ${validatedPercentagesTotal}% ($${distributedBaseTotal.toLocaleString()} / $${state.prizePool.toLocaleString()})`;
+            saveStateToStorage();
+        }
+
+        // FIXED LEADERBOARD RENDERING PIPELINE
+        function renderLeaderboard() {
+            const body = document.getElementById('leaderboardTableBody');
+            body.innerHTML = '';
+            const query = document.getElementById('lbSearch').value.toLowerCase().trim();
+            
+            let filtered = leaderboardData.filter(t => t.tag.toLowerCase().includes(query) || t.name.toLowerCase().includes(query));
+            if(filtered.length === 0) {
+                body.innerHTML = `<tr><td colspan="9" class="px-6 py-12 text-center text-gray-500 font-medium">No leaderboard rows match criteria filters.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/30 transition font-medium border-b border-gray-800/40";
+                
+                let rankVisual = index + 1;
+                if(index === 0) rankVisual = `<span class="bg-amber-500/10 border border-amber-500/20 text-amber-400 font-extrabold px-2.5 py-1 rounded-lg shadow-sm">1</span>`;
+                else if(index === 1) rankVisual = `<span class="bg-slate-400/10 border border-slate-400/20 text-slate-300 font-extrabold px-2.5 py-1 rounded-lg shadow-sm">2</span>`;
+                else if(index === 2) rankVisual = `<span class="bg-amber-700/10 border border-amber-700/20 text-amber-600 font-extrabold px-2.5 py-1 rounded-lg shadow-sm">3</span>`;
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3.5 text-center font-bold text-gray-400">${rankVisual}</td>
+                    <td class="px-6 py-3.5">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs bg-gray-800 font-mono text-gray-400 px-2 py-0.5 rounded border border-gray-700/30">${row.tag}</span>
+                            <span class="text-white font-bold tracking-wide">${row.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3.5 text-center text-gray-400 font-mono">${row.matchesPlayed}</td>
+                    <td class="px-4 py-3.5 text-center text-amber-400 font-bold font-mono">${row.wwcd}</td>
+                    <td class="px-4 py-3.5 text-center text-gray-300 font-mono">${row.placementPoints}</td>
+                    <td class="px-4 py-3.5 text-center text-gray-300 font-mono">${row.killPoints}</td>
+                    <td class="px-4 py-3.5 text-center text-emerald-400 font-mono">+${row.bonus}</td>
+                    <td class="px-4 py-3.5 text-center text-rose-400 font-mono">-${row.penalty}</td>
+                    <td class="px-6 py-3.5 text-center text-indigo-400 font-extrabold bg-indigo-600/5 font-mono text-base border-l border-r border-indigo-500/10">${row.totalPoints}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        // DATA CHARTS ENGINE CONFIGURATION (CHART.JS)
+        let trajectoryChartInstance = null;
+        let killDistChartInstance = null;
+        let placementRatioChartInstance = null;
+
+        function initCharts() {
+            const ctx = document.getElementById('dashTrajectoryChart').getContext('2d');
+            trajectoryChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', weight: 600 } } } },
+                    scales: {
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        function updateDashboardCharts() {
+            if(!trajectoryChartInstance) return;
+            const top5 = leaderboardData.slice(0, 5);
+            let maxMatches = 0;
+            top5.forEach(t => { if(t.history.length > maxMatches) maxMatches = t.history.length; });
+            
+            let labels = Array.from({length: maxMatches}, (_, i) => `Match ${i+1}`);
+            if(labels.length === 0) labels = ["No Matches Logged"];
+            
+            const colors = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+            const datasets = top5.map((team, idx) => ({
+                label: team.tag,
+                data: team.history,
+                borderColor: colors[idx % colors.length],
+                backgroundColor: 'transparent',
+                borderWidth: 3,
+                tension: 0.2,
+                pointRadius: 4
+            }));
+
+            trajectoryChartInstance.data.labels = labels;
+            trajectoryChartInstance.data.datasets = datasets;
+            trajectoryChartInstance.update();
+        }
+
+        function updateAnalyticsCharts() {
+            const ctxKill = document.getElementById('chartKillDistribution').getContext('2d');
+            const ctxPlace = document.getElementById('chartPlacementRatios').getContext('2d');
+
+            if(killDistChartInstance) killDistChartInstance.destroy();
+            if(placementRatioChartInstance) placementRatioChartInstance.destroy();
+
+            const labels = leaderboardData.map(t => t.tag);
+            const killData = leaderboardData.map(t => t.killPoints);
+            const placementData = leaderboardData.map(t => t.placementPoints);
+
+            killDistChartInstance = new Chart(ctxKill, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Kill Points', data: killData, backgroundColor: '#6366f1' }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+
+            placementRatioChartInstance = new Chart(ctxPlace, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Placement Points', data: placementData, backgroundColor: '#10b981' }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        // EXPORT PIPELINE HOOKS
+        function exportToCSV() {
+            let csv = "Rank,Team,Tag,Matches,WWCD,TotalPoints,BaseEarnings,KillBountyEarnings,GrossPayout\n";
+            leaderboardData.forEach((row, idx) => {
+                const currentRank = idx + 1;
+                const percentageCut = state.payoutPercentages[currentRank] || 0;
+                const baseRankPayout = (percentageCut / 100) * state.prizePool;
+                const killBountyPayout = row.rawKills * state.killBounty;
+                const gross = baseRankPayout + killBountyPayout;
+                
+                csv += `${currentRank},"${row.name}","${row.tag}",${row.matchesPlayed},${row.wwcd},${row.totalPoints},${baseRankPayout},${killBountyPayout},${gross}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Standings_Payouts_${state.tournament.name.replace(/\s+/g, '_')}.csv`);
+            a.click();
+        }
+
+        function exportToJSON() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `DatabaseBackup_${state.tournament.name.replace(/\s+/g, '_')}.json`);
+            a.click();
+        }
+    </script>
+</body>
+</html>
