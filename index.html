@@ -520,7 +520,7 @@
         }
 
         function removeTeam(id) {
-            if(confirm("Confirm removal of this team structure? This will clear related past historical match arrays.")) {
+            {
                 state.teams = state.teams.filter(t => t.id !== id);
                 state.matches.forEach(m => { m.records = m.records.filter(r => r.teamId !== id); });
                 saveStateToStorage();
@@ -691,7 +691,7 @@
         }
 
         function purgeMatch(id) {
-            if(confirm("Purge selected match dataset matrix? This recalculates global standings tables instantaneously.")) {
+            {
                 state.matches = state.matches.filter(m => m.id !== id);
                 saveStateToStorage();
                 syncMetaUI();
