@@ -84,8 +84,7 @@ Configure Tournament
 | Target Game       | Game being played          |
 | Tournament Format | Solo / Duo / Squad         |
 | Maximum Matches   | Total matches to be played |
-| Start Date        | Event start                |
-| End Date          | Event end                  |
+
 
 ### Example
 
@@ -117,7 +116,7 @@ Before recording matches, register all participating teams.
 Navigate:
 
 ```text
-Sidebar → Teams
+Sidebar → Team Roster
 ```
 
 Click:
@@ -133,7 +132,7 @@ Add Org
 | Org Name       | Team Soul |
 | Identifier Tag | SOUL      |
 | Captain Alias  | Omega     |
-| Region         | India     |
+
 
 ## Save Team
 
@@ -174,31 +173,7 @@ or
 ```text
 Scoring Settings
 ```
-
 ---
-
-## Preset Configurations
-
-### BGMI Preset
-
-```text
-1st Place = 15 Points
-Kill = 1 Point
-```
-
-### Free Fire Preset
-
-```text
-1st Place = 12 Points
-Kill = 1 Point
-```
-
-### VALORANT Preset
-
-```text
-Round-Based Structure
-```
-
 ---
 
 ## Manual Configuration
@@ -209,26 +184,9 @@ Customize:
 * Placement Rewards
 * Bonus Point Rules
 * Penalty Rules
-
-Example:
-
-| Placement | Points |
-| --------- | ------ |
-| #1        | 15     |
-| #2        | 12     |
-| #3        | 10     |
-| #4        | 8      |
-| #5        | 6      |
-
 ---
 
 ## Save Configuration
-
-Click:
-
-```text
-Save Global Configuration
-```
 
 All future matches will use the selected scoring system.
 
@@ -252,7 +210,6 @@ Matches → New Match
 | ------------ | ------------------ |
 | Match Number | 5                  |
 | Map Name     | Erangel            |
-| Date         | Current Match Date |
 
 ---
 
@@ -281,22 +238,7 @@ SOUL,1,12,0,0
 GODL,2,8,0,0
 TSM,3,6,0,0
 ```
-
-Click:
-
-```text
-CSV Load
-```
-
----
-
 ## Save Match
-
-Click:
-
-```text
-Commit Logs
-```
 
 Leaderboard recalculates instantly.
 
@@ -318,18 +260,7 @@ The system automatically sorts teams by:
 2. Placement Points
 3. Kill Points
 
----
 
-## Search & Filter
-
-Features:
-
-* Team Search
-* Instant Filtering
-* Rank Tracking
-* Position Movement Indicators
-
----
 
 ## 📈 Trajectory Chart
 
@@ -395,16 +326,6 @@ Payouts
 ```
 
 ### Rank Distribution
-
-Example:
-
-| Position | Share |
-| -------- | ----- |
-| 1st      | 40%   |
-| 2nd      | 25%   |
-| 3rd      | 15%   |
-| 4th      | 10%   |
-| 5th      | 10%   |
 
 ---
 
