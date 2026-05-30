@@ -435,48 +435,20 @@
         }
 
         function seedDemoDatabase() {
-            state.teams = [
-                { id: "t1", name: "Team Soul", tag: "SOUL", captain: "Mortal" },
-                { id: "t2", name: "GodLike Esports", tag: "GOD", captain: "Jonathan" },
-                { id: "t3", name: "Team XSpark", tag: "TX", captain: "Scout" },
-                { id: "t4", name: "Global Esports", tag: "GE", captain: "Mavi" },
-                { id: "t5", name: "Entity Gaming", tag: "ENT", captain: "Saumraj" },
-                { id: "t6", name: "Revenant Esports", tag: "RNT", captain: "Sensei" }
-            ];
+            state.teams = [];
             
             state.matches = [
                 {
                     id: "m1", matchNumber: 1, map: "Erangel", timestamp: new Date().toLocaleString(),
-                    records: [
-                        { teamId: "t1", placement: 1, kills: 5, bonus: 2, penalty: 0 },
-                        { teamId: "t2", placement: 2, kills: 3, bonus: 0, penalty: 0 },
-                        { teamId: "t3", placement: 3, kills: 2, bonus: 0, penalty: 0 },
-                        { teamId: "t4", placement: 4, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t6", placement: 6, kills: 0, bonus: 0, penalty: 0 }
-                    ]
+                    records: []
                 },
                 {
                     id: "m2", matchNumber: 2, map: "Miramar", timestamp: new Date().toLocaleString(),
-                    records: [
-                        { teamId: "t1", placement: 1, kills: 4, bonus: 0, penalty: 0 },
-                        { teamId: "t2", placement: 2, kills: 3, bonus: 0, penalty: 0 },
-                        { teamId: "t3", placement: 3, kills: 2, bonus: 0, penalty: 0 },
-                        { teamId: "t4", placement: 4, kills: 2, bonus: 0, penalty: 0 },
-                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t6", placement: 6, kills: 1, bonus: 0, penalty: 0 }
-                    ]
+                    records: []
                 },
                 {
                     id: "m3", matchNumber: 3, map: "Sanhok", timestamp: new Date().toLocaleString(),
-                    records: [
-                        { teamId: "t1", placement: 1, kills: 3, bonus: 0, penalty: 0 },
-                        { teamId: "t2", placement: 2, kills: 2, bonus: 0, penalty: 0 },
-                        { teamId: "t3", placement: 3, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t4", placement: 4, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t5", placement: 5, kills: 1, bonus: 0, penalty: 0 },
-                        { teamId: "t6", placement: 6, kills: 0, bonus: 0, penalty: 0 }
-                    ]
+                    records: []
                 }
             ];
             saveStateToStorage();
