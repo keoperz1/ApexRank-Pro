@@ -26,9 +26,6 @@
 * [Live Standings & Analytics](#-5-live-standings--analytics)
 * [Prize Pool Distribution](#-6-prize-pool-distribution)
 * [Data Export & Backup](#-7-data-export--backup)
-* [Supported Games](#-supported-games)
-* [Scoring Logic](#-scoring-logic)
-* [Best Practices](#-best-practices)
 
 ---
 
